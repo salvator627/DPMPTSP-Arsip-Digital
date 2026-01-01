@@ -1,0 +1,52 @@
+/* ==============================
+   SIDEBAR MENU HOVER & ACTIVE
+   ============================== */
+
+/* Link default */
+.sidebar .nav-link {
+    color: #212529;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover untuk semua menu */
+.sidebar .nav-link:hover {
+    background-color: #f8d7da; /* merah soft */
+    color: #a71d2a !important;
+}
+
+/* Item dropdown (submenu) */
+.sidebar .nav .nav-link {
+    padding-left: 1.5rem;
+    font-size: 0.95rem;
+}
+
+/* Hover khusus submenu */
+.sidebar .nav .nav-link:hover {
+    background-color: #fde2e5;
+}
+
+/* Active item */
+.sidebar .nav-link.active {
+    background-color: #dc3545; /* merah bootstrap */
+    color: #fff !important;
+    font-weight: 600;
+}
+
+/* Parent aktif (dropdown terbuka) */
+.sidebar .collapse.show + .nav-link,
+.sidebar .nav-item > .nav-link[aria-expanded="true"] {
+    background-color: #f1c0c7;
+    color: #842029 !important;
+}
+
+/* Panah dropdown */
+.sidebar .nav-link span {
+    transition: transform 0.2s ease;
+}
+
+/* Panah muter saat open */
+.sidebar .nav-link[aria-expanded="true"] span {
+    transform: rotate(180deg);
+}
