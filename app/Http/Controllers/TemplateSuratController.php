@@ -6,19 +6,23 @@ use App\Models\TemplateSurat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+
 class TemplateSuratController extends Controller
 {
-    // DAFTAR TEMPLATE
-    public function index()
-    {
-        $templates = TemplateSurat::latest()->get();
-        return view('template_surat.index', compact('templates'));
-    }
-
-    // FORM TAMBAH
     public function create()
     {
         return view('template_surat.create');
+    }
+    // DAFTAR TEMPLATE
+        public function index(Request $request)
+    {
+        $search = $request->search;
+
+        $templates = TemplateSurat::when($search, function ($query, $search) {
+            $query->where('nama_template', 'like', '%' . $search . '%');
+        })->get();
+
+        return view('template_surat.index', compact('templates', 'search'));
     }
 
     // SIMPAN DATA
