@@ -30,6 +30,7 @@ Route::get('/surat-masuk/daftar', [SuratMasukController::class, 'daftar'])
 
 Route::get('/surat-keluar/daftar', [SuratKeluarController::class, 'daftar'])
     ->name('surat-keluar.daftar');
+    
 
 Route::resource('surat-keluar', SuratKeluarController::class)
     ->only(['create','store']);

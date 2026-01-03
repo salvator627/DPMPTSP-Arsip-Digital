@@ -1,108 +1,113 @@
 @extends('layouts.app')
- 
+
 @section('content')
-<div class="container-fluid py-4">
+<div class="container-fluid px-4 py-4">
+
+    {{-- HEADER --}}
+    <div class="mb-4 animate-fade">
+        <h4 class="fw-semibold mb-1">Registrasi Surat Masuk</h4>
+        <small class="text-muted">
+            Tambahkan data surat masuk Dinas Penanaman Modal dan PTSP
+        </small>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-lg-10 col-xl-9">
 
-            <div class="card shadow-form border-0 animate-fade">
-                <div class="card-header bg-white fw-bold fs-5 py-3 rounded-top-4">
-                    📥 Form Registrasi Surat Masuk
-                </div>
-
+            <div class="card card-minimal animate-fade">
                 <div class="card-body p-4 p-md-5">
 
-                    <form action="{{ route('surat-masuk.store') }}" 
-                          method="POST" 
+                    <form action="{{ route('surat-masuk.store') }}"
+                          method="POST"
                           enctype="multipart/form-data"
-                          class="needs-validation"
                           novalidate>
                         @csrf
 
-                        <!-- Nomor Surat -->
+                        {{-- NOMOR SURAT --}}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Nomor Surat</label>
-                            <input type="text" 
-                                   name="nomor_surat" 
+                            <label class="form-label fw-medium">Nomor Surat</label>
+                            <input type="text"
+                                   name="nomor_surat"
                                    class="form-control form-control-lg"
-                                   placeholder="Contoh: 123/DPMPTSP/2025"
+                                   placeholder="Contoh: BU.005/Pem.21/219/IX/2025"
                                    required>
                         </div>
 
-                        <!-- Tanggal -->
+                        {{-- TANGGAL --}}
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-semibold">Tanggal Surat</label>
-                                <input type="date" 
-                                       name="tanggal_surat" 
+                                <label class="form-label fw-medium">Tanggal Surat</label>
+                                <input type="date"
+                                       name="tanggal_surat"
                                        class="form-control form-control-lg"
                                        required>
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-semibold">Tanggal Terima</label>
-                                <input type="date" 
-                                       name="tanggal_terima" 
+                                <label class="form-label fw-medium">Tanggal Terima</label>
+                                <input type="date"
+                                       name="tanggal_terima"
                                        class="form-control form-control-lg"
                                        required>
                             </div>
                         </div>
 
-                        <!-- Asal Surat -->
+                        {{-- ASAL SURAT --}}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Asal Surat</label>
-                            <input type="text" 
-                                   name="asal_surat" 
+                            <label class="form-label fw-medium">Asal Surat</label>
+                            <input type="text"
+                                   name="asal_surat"
                                    class="form-control form-control-lg"
-                                   placeholder="Nama instansi / pengirim"
+                                   placeholder="Instansi / pengirim"
                                    required>
                         </div>
 
-                        <!-- Perihal -->
+                        {{-- PERIHAL --}}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Perihal</label>
-                            <input type="text" 
-                                   name="perihal" 
+                            <label class="form-label fw-medium">Perihal</label>
+                            <input type="text"
+                                   name="perihal"
                                    class="form-control form-control-lg"
                                    placeholder="Perihal surat"
                                    required>
                         </div>
 
-                        <!-- Keterangan -->
+                        {{-- KETERANGAN --}}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Keterangan</label>
-                            <textarea name="keterangan" 
-                                      rows="4" 
+                            <label class="form-label fw-medium">Keterangan</label>
+                            <textarea name="keterangan"
+                                      rows="4"
                                       class="form-control form-control-lg"
                                       placeholder="Catatan tambahan (opsional)"></textarea>
                         </div>
 
-                        <!-- File -->
+                        {{-- FILE --}}
                         <div class="mb-5">
-                            <label class="form-label fw-semibold">
+                            <label class="form-label fw-medium">
                                 Upload File Surat <span class="text-muted">(PDF)</span>
                             </label>
-                            <input type="file" 
-                                   name="file_surat" 
+                            <input type="file"
+                                   name="file_surat"
                                    class="form-control form-control-lg"
                                    accept="application/pdf">
                         </div>
 
-                        <!-- Action -->
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="reset" class="btn btn-outline-secondary btn-lg px-4">
-                                ↩ Reset
+                        {{-- ACTION --}}
+                        <div class="d-flex flex-wrap justify-content-end gap-2">
+                            <button type="reset"
+                                    class="btn btn-soft-secondary rounded-pill px-4">
+                                Reset
                             </button>
 
-                            <button type="submit" class="btn btn-primary btn-lg px-5">
-                                💾 Simpan Surat
-                            </button>
-
-                             <a href="{{ route('surat-masuk.daftar') }}"
-                            class="btn btn-outline-secondary px-4">
-                                📄 Lihat Daftar Surat Masuk
+                            <a href="{{ route('surat-masuk.daftar') }}"
+                               class="btn btn-soft-primary rounded-pill px-4">
+                                Daftar Surat
                             </a>
 
+                            <button type="submit"
+                                    class="btn btn-primary rounded-pill px-5">
+                                Simpan
+                            </button>
                         </div>
 
                     </form>
@@ -112,10 +117,52 @@
 
         </div>
     </div>
+
 </div>
+
+{{-- STYLE --}}
 <style>
+/* CARD */
+.card-minimal {
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 10px 28px rgba(0,0,0,.05);
+}
+
+/* FORM */
+.form-control {
+    border-radius: 14px;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 .15rem rgba(13,110,253,.15);
+}
+
+/* BUTTON SOFT */
+.btn-soft-primary {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: none;
+}
+
+.btn-soft-primary:hover {
+    background: #d0e7fb;
+}
+
+.btn-soft-secondary {
+    background: #f1f3f5;
+    color: #343a40;
+    border: none;
+}
+
+.btn-soft-secondary:hover {
+    background: #e9ecef;
+}
+
+/* ANIMATION */
 .animate-fade {
-    animation: fadeUp 0.4s ease-in-out;
+    animation: fadeUp .45s ease;
 }
 
 @keyframes fadeUp {
@@ -128,11 +175,5 @@
         transform: translateY(0);
     }
 }
-
-.shadow-form {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-    border-radius: 12px;
-}
 </style>
-
 @endsection

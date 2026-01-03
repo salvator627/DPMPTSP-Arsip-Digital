@@ -43,11 +43,30 @@ class SuratMasukController extends Controller
     return redirect()->back()->with('success', 'Surat masuk berhasil disimpan');
 }
 
-public function daftar()
+public function daftar(Request $request)
 {
-    $suratMasuk = SuratMasuk::orderBy('id', 'asc')->get();
+    $search = $request->search;
 
-    return view('suratMasuk.daftar', compact('suratMasuk'));
+    $suratMasuk = SuratMasuk::when($search, function ($query, $search) {
+        $query->where('nomor_surat', 'like', "%{$search}%")
+              ->orWhere('asal_surat', 'like', "%{$search}%")
+              ->orWhere('perihal', 'like', "%{$search}%");
+    })->orderBy('id', 'asc')->get();
+
+    return view('suratMasuk.daftar', compact('suratMasuk', 'search'));
+}
+
+public function index(Request $request)
+{
+    $search = $request->search;
+
+    $suratMasuk = SuratMasuk::when($search, function ($query, $search) {
+        $query->where('nomor_surat', 'like', "%$search%")
+              ->orWhere('asal_surat', 'like', "%$search%")
+              ->orWhere('perihal', 'like', "%$search%");
+    })->get();
+
+    return view('surat_masuk.index', compact('suratMasuk', 'search'));
 }
 
 

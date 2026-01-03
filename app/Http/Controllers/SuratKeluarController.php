@@ -37,9 +37,19 @@ class SuratKeluarController extends Controller
             ->with('success', 'Surat keluar berhasil disimpan');
     }
 
-    public function daftar()
-    {
-        $suratKeluar = SuratKeluar::orderBy('id', 'asc')->get();
-        return view('suratKeluar.daftar', compact('suratKeluar'));
-    }
+public function daftar(Request $request)
+{
+    $search = $request->search;
+
+    $suratKeluar = SuratKeluar::when($search, function ($query, $search) {
+        $query->where('nomor_surat', 'like', "%{$search}%")
+              ->orWhere('tujuan_surat', 'like', "%{$search}%")
+              ->orWhere('perihal', 'like', "%{$search}%");
+    })
+    ->orderBy('id', 'asc')->get();
+    
+
+    return view('suratKeluar.daftar', compact('suratKeluar', 'search'));
+}
+
 }

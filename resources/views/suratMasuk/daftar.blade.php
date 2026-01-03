@@ -1,62 +1,153 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid px-4 py-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold">📄 Daftar Surat Masuk</h4>
+    {{-- HEADER --}}
+    <div class="d-flex justify-content-between align-items-center mb-4 animate-fade">
+        <div>
+            <h4 class="fw-semibold mb-1">Daftar Surat Masuk</h4>
+            <small class="text-muted">
+                Daftar Surat Masuk Dinas Penanaman Modal dan PTSP
+            </small>
+        </div>
 
-        <a href="{{ route('surat-masuk.create') }}" class="btn btn-danger">
+        <a href="{{ route('surat-masuk.create') }}"
+           class="btn btn-primary rounded-pill px-4">
             ➕ Tambah Surat Masuk
         </a>
     </div>
 
-    <div class="card shadow-sm border-0">
+    {{-- SEARCH --}}
+    <div class="card card-minimal mb-4 animate-fade">
         <div class="card-body">
-
-            <table class="table table-bordered table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>No</th>
-                        <th>Nomor Surat</th>
-                        <th>Tanggal Surat</th>
-                        <th>Asal Surat</th>
-                        <th>Perihal</th>
-                        <th>File</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @forelse ($suratMasuk as $item)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item->nomor_surat }}</td>
-                            <td>{{ $item->tanggal_surat }}</td>
-                            <td>{{ $item->asal_surat }}</td>
-                            <td>{{ $item->perihal }}</td>
-                            <td>
-                                @if ($item->file_surat)
-                                    <a href="{{ asset('storage/'.$item->file_surat) }}"
-                                       target="_blank"
-                                       class="btn btn-sm btn-outline-primary">
-                                        📄 Lihat
-                                    </a>
-                                @else
-                                    <span class="text-muted">Tidak ada</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">
-                                Belum ada data surat masuk
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-
+            <form method="GET" action="{{ route('surat-masuk.daftar') }}">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-white border-end-0 rounded-start-pill">
+                        🔍
+                    </span>
+                    <input type="text"
+                           name="search"
+                           value="{{ $search ?? '' }}"
+                           class="form-control border-start-0 rounded-end-pill"
+                           placeholder="Cari nomor surat / asal / perihal">
+                </div>
+            </form>
         </div>
     </div>
+
+    {{-- TABLE --}}
+    <div class="card card-minimal animate-fade">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="70" class="ps-4">No</th>
+                            <th>Nomor Surat</th>
+                            <th>Tanggal</th>
+                            <th>Asal Surat</th>
+                            <th>Perihal</th>
+                            <th width="160" class="text-center">File</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @forelse ($suratMasuk as $item)
+                            <tr>
+                                <td class="ps-4">{{ $loop->iteration }}</td>
+                                <td>{{ $item->nomor_surat }}</td>
+                                <td>{{ $item->tanggal_surat }}</td>
+                                <td>{{ $item->asal_surat }}</td>
+                                <td>{{ $item->perihal }}</td>
+                                <td class="text-center">
+                                    @if ($item->file_surat)
+                                        <a href="{{ asset('storage/'.$item->file_surat) }}"
+                                           target="_blank"
+                                           class="btn btn-sm btn-soft success">
+                                            📄 Lihat
+                                        </a>
+                                    @else
+                                        <span class="text-muted">—</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <div class="mb-2 fs-4">📄</div>
+                                    Data surat masuk tidak ditemukan
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+{{-- STYLE --}}
+<style>
+/* CARD */
+.card-minimal {
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 10px 28px rgba(0,0,0,.05);
+}
+
+/* TABLE */
+.table thead th {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    font-weight: 600;
+}
+
+.table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* BUTTON SOFT (KONSISTEN) */
+.btn-soft {
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: all .2s ease;
+}
+
+.btn-soft.success {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.btn-soft.success:hover {
+    background: #dcedc8;
+}
+
+/* INPUT */
+.input-group-text {
+    border-radius: 50px;
+}
+
+/* ANIMATION */
+.animate-fade {
+    animation: fadeUp .5s ease;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
 @endsection

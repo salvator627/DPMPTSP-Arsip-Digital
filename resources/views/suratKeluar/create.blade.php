@@ -1,116 +1,159 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid px-4 py-4">
+
+    {{-- HEADER --}}
+    <div class="mb-4 animate-fade">
+        <h4 class="fw-semibold mb-1">Registrasi Surat Keluar</h4>
+        <small class="text-muted">
+            Tambahkan data surat keluar Dinas Penanaman Modal dan PTSP
+        </small>
+    </div>
+
     <div class="row justify-content-center">
-        <div class="col-xl-9 col-lg-10">
+        <div class="col-lg-10 col-xl-9">
 
-            <div class="card shadow-form border-0 animate-fade">
-                <div class="card-header bg-white fw-bold fs-5 d-flex align-items-center">
-                    📤 <span class="ms-2">Form Registrasi Surat Keluar</span>
-                </div>
+            <div class="card card-minimal animate-fade">
+                <div class="card-body p-4 p-md-5">
 
-                <div class="card-body px-5 py-4">
-                    <form action="{{ route('surat-keluar.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('surat-keluar.store') }}"
+                          method="POST"
+                          enctype="multipart/form-data"
+                          novalidate>
                         @csrf
 
-                        <!-- Nomor Surat -->
+                        {{-- NOMOR SURAT --}}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Nomor Surat</label>
+                            <label class="form-label fw-medium">Nomor Surat</label>
                             <input type="text"
                                    name="nomor_surat"
-                                   class="form-control form-control-lg form-interactive"
-                                   placeholder="Contoh: 123/DPMPTSP/2025"
+                                   class="form-control form-control-lg"
+                                   placeholder="Contoh: 001/DPMPTSP/IX/2025"
                                    required>
                         </div>
 
-                        <!-- Tanggal & Tujuan -->
+                        {{-- TANGGAL & TUJUAN --}}
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-semibold">Tanggal Surat</label>
+                                <label class="form-label fw-medium">Tanggal Surat</label>
                                 <input type="date"
                                        name="tanggal_surat"
-                                       class="form-control form-control-lg form-interactive"
+                                       class="form-control form-control-lg"
                                        required>
                             </div>
 
                             <div class="col-md-6 mb-4">
-                                <label class="form-label fw-semibold">Tujuan Surat</label>
+                                <label class="form-label fw-medium">Tujuan Surat</label>
                                 <input type="text"
                                        name="tujuan_surat"
-                                       class="form-control form-control-lg form-interactive"
-                                       placeholder="Instansi / Perorangan"
+                                       class="form-control form-control-lg"
+                                       placeholder="Instansi / penerima"
                                        required>
                             </div>
                         </div>
 
-                        <!-- Perihal -->
+                        {{-- PERIHAL --}}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Perihal</label>
+                            <label class="form-label fw-medium">Perihal</label>
                             <input type="text"
                                    name="perihal"
-                                   class="form-control form-control-lg form-interactive"
+                                   class="form-control form-control-lg"
                                    placeholder="Perihal surat"
                                    required>
                         </div>
 
-                        <!-- Keterangan -->
+                        {{-- KETERANGAN --}}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Keterangan</label>
+                            <label class="form-label fw-medium">Keterangan</label>
                             <textarea name="keterangan"
                                       rows="4"
-                                      class="form-control form-control-lg form-interactive"
+                                      class="form-control form-control-lg"
                                       placeholder="Catatan tambahan (opsional)"></textarea>
                         </div>
 
-                        <!-- Upload -->
+                        {{-- FILE --}}
                         <div class="mb-5">
-                            <label class="form-label fw-semibold">
-                                Upload File Surat (PDF)
+                            <label class="form-label fw-medium">
+                                Upload File Surat <span class="text-muted">(PDF)</span>
                             </label>
                             <input type="file"
                                    name="file_surat"
-                                   class="form-control form-control-lg form-interactive"
+                                   class="form-control form-control-lg"
                                    accept="application/pdf">
-                            <small class="text-muted">
-                                Hanya file PDF, maksimal 2MB
-                            </small>
                         </div>
 
-                        <!-- BUTTON -->
-                        <div class="d-flex justify-content-end gap-3">
+                        {{-- ACTION --}}
+                        <div class="d-flex flex-wrap justify-content-end gap-2">
+                            <button type="reset"
+                                    class="btn btn-soft-secondary rounded-pill px-4">
+                                Reset
+                            </button>
+
                             <a href="{{ route('surat-keluar.daftar') }}"
-                               class="btn btn-outline-secondary btn-lg px-4">
-                                📄 Daftar Surat Keluar
+                               class="btn btn-soft-primary rounded-pill px-4">
+                                Daftar Surat
                             </a>
 
                             <button type="submit"
-                                    class="btn btn-primary btn-lg px-4">
-                                💾 Simpan Surat
+                                    class="btn btn-primary rounded-pill px-5">
+                                Simpan
                             </button>
                         </div>
 
                     </form>
+
                 </div>
             </div>
 
         </div>
     </div>
+
 </div>
 
-{{-- CSS --}}
+{{-- STYLE --}}
 <style>
-.form-interactive {
-    transition: all 0.2s ease-in-out;
+/* CARD */
+.card-minimal {
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 10px 28px rgba(0,0,0,.05);
 }
 
-.form-interactive:focus {
+/* FORM */
+.form-control {
+    border-radius: 14px;
+}
+
+.form-control:focus {
     border-color: #0d6efd;
-    box-shadow: 0 0 0 0.15rem rgba(13,110,253,.25);
+    box-shadow: 0 0 0 .15rem rgba(13,110,253,.15);
 }
 
+/* BUTTON SOFT */
+.btn-soft-primary {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: none;
+}
+
+.btn-soft-primary:hover {
+    background: #d0e7fb;
+}
+
+.btn-soft-secondary {
+    background: #f1f3f5;
+    color: #343a40;
+    border: none;
+}
+
+.btn-soft-secondary:hover {
+    background: #e9ecef;
+}
+
+/* ANIMATION */
 .animate-fade {
-    animation: fadeUp .4s ease-in-out;
+    animation: fadeUp .45s ease;
 }
 
 @keyframes fadeUp {
@@ -122,21 +165,6 @@
         opacity: 1;
         transform: translateY(0);
     }
-}
-.shadow-form {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-    border-radius: 12px;
-}
-
-.shadow-form {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-    border-radius: 12px;
-    transition: all 0.2s ease-in-out;
-}
-
-.shadow-form:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
 }
 </style>
 @endsection
