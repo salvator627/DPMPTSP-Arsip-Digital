@@ -1,16 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid px-4 py-4">
+
+    {{-- HEADER --}}
+    <div class="mb-4 animate-fade">
+        <h4 class="fw-semibold mb-1">Tambah Template Surat</h4>
+        <small class="text-muted">
+            Tambahkan template surat yang akan digunakan
+        </small>
+    </div>
+
     <div class="row justify-content-center">
-        <div class="col-xl-8 col-lg-9">
+        <div class="col-lg-10 col-xl-9">
 
-            <div class="card shadow-lg border-0 animate-fade">
-                <div class="card-header bg-white fw-semibold fs-5">
-                    📄 Tambah Template Surat
-                </div>
-
-                <div class="card-body px-4 py-4">
+            <div class="card card-minimal animate-fade">
+                <div class="card-body p-4 p-md-5">
 
                     <form action="{{ route('template-surat.store') }}"
                           method="POST"
@@ -19,7 +24,7 @@
 
                         {{-- NAMA TEMPLATE --}}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">
+                            <label class="form-label fw-medium">
                                 Nama Template
                             </label>
                             <input type="text"
@@ -33,15 +38,15 @@
                         </div>
 
                         {{-- FILE TEMPLATE --}}
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">
+                        <div class="mb-5">
+                            <label class="form-label fw-medium">
                                 File Template Surat
                             </label>
 
                             <div class="upload-box">
                                 <input type="file"
                                        name="file_template"
-                                       class="form-control"
+                                       class="form-control form-control-lg"
                                        accept=".doc,.docx"
                                        required>
 
@@ -51,16 +56,16 @@
                             </div>
                         </div>
 
-                        {{-- BUTTON --}}
-                        <div class="d-flex justify-content-end gap-2 mt-4">
+                        {{-- ACTION --}}
+                        <div class="d-flex flex-wrap justify-content-end gap-2">
                             <a href="{{ route('template-surat.index') }}"
-                               class="btn btn-outline-secondary px-4">
-                                📄 Daftar Template
+                               class="btn btn-soft-primary rounded-pill px-4">
+                                Daftar Template
                             </a>
 
                             <button type="submit"
-                                    class="btn btn-primary px-4">
-                                💾 Simpan Template
+                                    class="btn btn-primary rounded-pill px-5">
+                                Simpan
                             </button>
                         </div>
 
@@ -71,53 +76,66 @@
 
         </div>
     </div>
+
 </div>
 
 {{-- STYLE --}}
 <style>
-/* ANIMATION */
-.animate-fade {
-    animation: fadeUp .5s ease-in-out;
-}
-
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(12px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* CARD */
-.card {
-    border-radius: 16px;
+.card-minimal {
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 10px 28px rgba(0,0,0,.05);
 }
 
-/* INPUT FOCUS */
+/* FORM */
+.form-control {
+    border-radius: 14px;
+}
+
 .form-control:focus {
+    border-color: #0d6efd;
     box-shadow: 0 0 0 .15rem rgba(13,110,253,.15);
 }
 
 /* UPLOAD BOX */
 .upload-box {
     background: #f8f9fa;
-    padding: 16px;
-    border-radius: 12px;
+    padding: 18px;
+    border-radius: 14px;
     border: 1px dashed #ced4da;
-    transition: all .2s ease;
+    transition: all .25s ease;
 }
 
 .upload-box:hover {
     background: #f1f3f5;
 }
 
-/* BUTTON */
-.btn {
-    border-radius: 50px;
-    font-weight: 500;
+/* BUTTON SOFT */
+.btn-soft-primary {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: none;
+}
+
+.btn-soft-primary:hover {
+    background: #d0e7fb;
+}
+
+/* ANIMATION */
+.animate-fade {
+    animation: fadeUp .45s ease;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>
 @endsection

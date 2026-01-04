@@ -1,131 +1,170 @@
-<!-- Sidebar -->
-<link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+<div class="sidebar-modern">
 
-
-<div class="sidebar d-flex flex-column flex-shrink-0 p-3 bg-white border-end"
-     style="width: 280px; min-height: 100vh;">
-
-
-    <!-- Logo / Header -->
-    <div class="mb-4 d-flex align-items-center">
-        <img src="{{ asset('images/logo-ende.png') }}"
-             alt="Logo Kabupaten Ende"
-             style="width: 55px;"
-             class="me-3">
-
-        <div class="lh-sm">
-            <h6 class="fw-bold text-danger mb-1">
+    {{-- HEADER --}}
+    <div class="sidebar-header">
+        <img src="{{ asset('images/logo-ende.png') }}" alt="Logo">
+        <div>
+            <div class="sidebar-title">
                 DINAS PENANAMAN MODAL DAN PELAYANAN TERPADU SATU PINTU
-            </h6>
-            <small class="text-muted">
-                Kabupaten Ende
-            </small>
+            </div>
+            <small>Kabupaten Ende</small>
         </div>
     </div>
 
-    <ul class="nav nav-pills flex-column mb-auto">
+    {{-- MENU --}}
+    <ul class="sidebar-menu">
 
-        <!-- ARSIP SURAT -->
-<li class="nav-item mt-3">
-    <a class="nav-link text-dark d-flex justify-content-between align-items-center"
-       data-bs-toggle="collapse"
-       href="#menuArsipSurat"
-       role="button">
-        ARSIP SURAT
-        <span>▾</span>
-    </a>
+        {{-- DASHBOARD --}}
+        <li>
+            <a href="{{ route('home') }}"
+               class="menu-item {{ request()->routeIs('home') ? 'active' : '' }}">
+                Dashboard
+            </a>
+        </li>
 
-    <div class="collapse show" id="menuArsipSurat">
-        <ul class="nav flex-column ms-3">
-            <li class="nav-item">
-                <a href="{{ route('surat-masuk.create') }}"
-                   class="nav-link text-dark sidebar-hover">
-                    • Surat Masuk
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('surat-keluar.create') }}"
-                   class="nav-link text-dark sidebar-hover">
-                    • Surat Keluar
-                </a>
-            </li>
-        </ul>
-    </div>
-</li>
+        {{-- ARSIP SURAT --}}
+        <li class="menu-section">ARSIP SURAT</li>
 
+        <li>
+            <a href="{{ route('surat-masuk.create') }}"
+               class="menu-item {{ request()->routeIs('surat-masuk.*') ? 'active' : '' }}">
+                Surat Masuk
+            </a>
+        </li>
 
-        <!-- PENGGUNA -->
-     
-<li class="nav-item mt-3">
-    <a class="nav-link text-dark d-flex justify-content-between align-items-center"
-       data-bs-toggle="collapse"
-       href="#menuPengguna"
-       role="button">
-        PEGAWAI
-        <span>▾</span>
-    </a>
+        <li>
+            <a href="{{ route('surat-keluar.create') }}"
+               class="menu-item {{ request()->routeIs('surat-keluar.*') ? 'active' : '' }}">
+                Surat Keluar
+            </a>
+        </li>
 
-    <div class="collapse {{ request()->routeIs('jabatan.*','pengguna.*') ? 'show' : '' }}"
-         id="menuPengguna">
-        <ul class="nav flex-column ms-3">
-            <li class="nav-item">
-                <a href="{{ route('pegawai.index') }}"
-                    class="nav-link sidebar-hover text-dark">
-                     • Tambah Pegawai
-                </a>
+        {{-- PEGAWAI --}}
+        <li class="menu-section">PEGAWAI</li>
 
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('pegawai.daftar') }}" class="nav-link sidebar-hover">
-                 • Daftar Pegawai
-                </a>
-            </li>
-        </ul>
-    </div>
-</li>
-<!-- SURAT TUGAS (Dropdown Parent) -->
-<li class="nav-item mt-3">
-    <a class="nav-link text-dark d-flex justify-content-between align-items-center"
-       data-bs-toggle="collapse"
-       href="#menuSuratTugas"
-       role="button">
-        SURAT TUGAS
-        <span>▾</span>
-    </a>
+        <li>
+            <a href="{{ route('pegawai.index') }}"
+               class="menu-item {{ request()->routeIs('pegawai.index') ? 'active' : '' }}">
+                Tambah Pegawai
+            </a>
+        </li>
 
-    <div class="collapse" id="menuSuratTugas">
-        <ul class="nav flex-column ms-3">
-            <li class="nav-item">
-                <a href="{{ route('home') }}"
-                   class="nav-link text-dark sidebar-hover">
-                    • Surat Tugas dan SPPD
-                </a>
-            </li>
-        </ul>
-    </div>
-</li>
-<!-- TEMPLATE SURAT (Dropdown Parent) -->
-<li class="nav-item mt-3">
-    <a class="nav-link text-dark d-flex justify-content-between align-items-center"
-       data-bs-toggle="collapse"
-       href="#menuTemplateSurat"
-       role="button">
-        TEMPLATE SURAT
-        <span>▾</span>
-    </a>
+        <li>
+            <a href="{{ route('pegawai.daftar') }}"
+               class="menu-item {{ request()->routeIs('pegawai.daftar') ? 'active' : '' }}">
+                Daftar Pegawai
+            </a>
+        </li>
 
-    <div class="collapse" id="menuTemplateSurat">
-        <ul class="nav flex-column ms-3">
-            <li class="nav-item">
-                <a href="{{ route('template-surat.index') }}"
-                    class="nav-link text-dark sidebar-hover">
-                        • Template Surat Dinas
-                </a>
-            </li>
-        </ul>
-    </div>
-</li>
+        {{-- SURAT TUGAS --}}
+        <li class="menu-section">SURAT TUGAS</li>
 
+        <li>
+            <a href="{{ route('home') }}"
+               class="menu-item">
+                Surat Tugas & SPPD
+            </a>
+        </li>
 
-</ul>
+        {{-- TEMPLATE --}}
+        <li class="menu-section">TEMPLATE</li>
+
+        <li>
+            <a href="{{ route('template-surat.index') }}"
+               class="menu-item {{ request()->routeIs('template-surat.*') ? 'active' : '' }}">
+                Template Surat
+            </a>
+        </li>
+
+    </ul>
+
 </div>
+
+<style>
+/* ===============================
+   SIDEBAR BASE
+================================ */
+.sidebar-modern {
+    width: 280px;
+    min-width: 280px;
+    padding: 22px;
+    flex-shrink: 0;
+    color: #fff;
+    background: linear-gradient(
+        180deg,
+        #2563eb 0%,
+        #1e40af 55%,
+        #1e3a8a 100%
+    );
+}
+
+/* ===============================
+   HEADER
+================================ */
+.sidebar-header {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 32px;
+}
+
+.sidebar-header img {
+    width: 54px;
+    object-fit: contain;
+}
+
+.sidebar-title {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.sidebar-header small {
+    font-size: 11px;
+    opacity: .85;
+}
+
+/* ===============================
+   MENU
+================================ */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* SECTION LABEL */
+.menu-section {
+    margin: 22px 12px 10px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    opacity: .6;
+}
+
+/* MENU ITEM */
+.menu-item {
+    display: block;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: rgba(255,255,255,.88);
+    text-decoration: none;
+    border-radius: 12px;
+    transition:
+        background .25s ease,
+        transform .25s ease,
+        color .25s ease;
+}
+
+/* HOVER */
+.menu-item:hover {
+    background: rgba(255,255,255,.18);
+    color: #fff;
+    transform: translateX(6px);
+}
+
+/* ACTIVE */
+.menu-item.active {
+    background: rgba(255,255,255,.28);
+    color: #fff;
+}
+</style>

@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
+    <!-- CSRF -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Aplikasi Surat') }}</title>
 
-    <!-- Fonts -->
+    <!-- Font -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
@@ -21,101 +21,60 @@
 
     <!-- Footer CSS -->
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
-    
-
 </head>
 
-
 <body>
-<div id="app" class="d-flex flex-column min-vh-100">
 
-    <!-- ================= TOP NAVBAR ================= -->
-    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="{{ route('home') }}">
-                {{ config('app.name', 'Laravel') }}
-            </a>
+<div id="app" class="app-wrapper">
 
-            <button class="navbar-toggler" type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    {{-- ================= NAVBAR ================= --}}
+    @auth
+    <nav class="app-navbar">
+        <div class="navbar-left">
+            <h6 class="page-title">
+                @yield('page-title', 'Dashboard')
+            </h6>
+        </div>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- LEFT -->
-                <ul class="navbar-nav me-auto"></ul>
+        <div class="navbar-right">
+            <div class="user-wrapper">
+                <span class="user-name">
+                    {{ Auth::user()->name }}
+                </span>
 
-                <!-- RIGHT -->
-                
-                <ul class="navbar-nav ms-auto">
-                    @guest
-                        @if (Route::has('login'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">Login</a>
-                            </li>
-                        @endif
-
-                        @if (Route::has('register'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">Register</a>
-                            </li>
-                        @endif
-                    @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown"
-                               class="nav-link dropdown-toggle"
-                               href="#"
-                               role="button"
-                               data-bs-toggle="dropdown">
-                                {{ Auth::user()->name }}
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item"
-                                   href="{{ route('logout') }}"
-                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-
-                                <form id="logout-form"
-                                      action="{{ route('logout') }}"
-                                      method="POST"
-                                      class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                    @endguest
-                </ul>
-                
+                <div class="user-dropdown">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
-    <!-- ================= END NAVBAR ================= -->
+    @endauth
+    {{-- ================= END NAVBAR ================= --}}
 
-    <!-- ================= MAIN BODY ================= -->
-    <div class="d-flex flex-grow-1">
+    {{-- ================= BODY ================= --}}
+    <div class="app-main">
 
-        <!-- SIDEBAR (HANYA SAAT LOGIN) -->
+        {{-- SIDEBAR --}}
         @auth
             @include('layouts.siderbar')
         @endauth
 
-        <!-- CONTENT -->
-        <main class="flex-grow-1 p-4 bg-light">
+        {{-- CONTENT --}}
+        <main class="app-content">
             @yield('content')
         </main>
 
     </div>
-    <!-- ================= END MAIN BODY ================= -->
+    {{-- ================= END BODY ================= --}}
 
-    <!-- ================= FOOTER ================= -->
-    <footer class="app-footer mt-auto">
+    {{-- ================= FOOTER ================= --}}
+    <footer class="app-footer">
         <div class="container py-4">
             <div class="row">
 
-                <!-- LEFT -->
                 <div class="col-md-6 mb-3 mb-md-0">
                     <div class="footer-item">
                         <i class="bi bi-geo-alt"></i>
@@ -138,27 +97,120 @@
                     </div>
                 </div>
 
-                <!-- RIGHT -->
                 <div class="col-md-6 text-md-end">
                     <h6 class="footer-title">Tentang Instansi</h6>
                     <p class="footer-text">
                         Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu
                         Kabupaten Ende.
                     </p>
-
-                    <div class="footer-social">
-                        <a href="#"><i class="bi bi-facebook"></i></a>
-                        <a href="#"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#"><i class="bi bi-linkedin"></i></a>
-                        <a href="#"><i class="bi bi-globe"></i></a>
-                    </div>
                 </div>
 
             </div>
         </div>
     </footer>
-    <!-- ================= END FOOTER ================= -->
+    {{-- ================= END FOOTER ================= --}}
 
 </div>
+
 </body>
 </html>
+<style>
+    /* ================= APP STRUCTURE ================= */
+.app-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================= NAVBAR ================= */
+.app-navbar {
+    height: 64px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1200;
+}
+
+.page-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1f2937;
+}
+
+/* USER */
+.user-wrapper {
+    position: relative;
+}
+
+.user-name {
+    font-size: 14px;
+    color: #374151;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.user-wrapper:hover .user-name {
+    background: #f3f4f6;
+}
+
+/* DROPDOWN */
+.user-dropdown {
+    position: absolute;
+    right: 0;
+    top: 44px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    padding: 8px;
+    display: none;
+    min-width: 140px;
+}
+
+.user-wrapper:hover .user-dropdown {
+    display: block;
+}
+
+.user-dropdown button {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 13px;
+    color: #374151;
+    border-radius: 8px;
+}
+
+.user-dropdown button:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* ================= MAIN ================= */
+.app-main {
+    display: flex;
+    flex: 1;
+    background: #f4f6fb;
+}
+
+/* ================= CONTENT ================= */
+.app-content {
+    flex: 1;
+    padding: 24px;
+    overflow-x: hidden;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 992px) {
+    .app-main {
+        flex-direction: column;
+    }
+}
+
+</style>

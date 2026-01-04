@@ -1,68 +1,95 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\SuratKeluarController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\TemplateSuratController;
+
+/*
+|--------------------------------------------------------------------------
+| AUTH & LANDING
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('auth.login');
 });
 
-
-
-
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'home'])->name('home');
+Route::get('/home', [HomeController::class, 'home'])
+    ->name('home')
+    ->middleware('auth');
 
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/surat-masuk/create', [SuratMasukController::class, 'create'])->name('surat-masuk.create');
-    Route::post('/surat-masuk', [SuratMasukController::class, 'store'])->name('surat-masuk.store');
+/*
+|--------------------------------------------------------------------------
+| SURAT MASUK
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+
+    Route::prefix('surat-masuk')->name('surat-masuk.')->group(function () {
+        Route::get('create', [SuratMasukController::class, 'create'])->name('create');
+        Route::post('/', [SuratMasukController::class, 'store'])->name('store');
+        Route::get('daftar', [SuratMasukController::class, 'daftar'])->name('daftar');
+    });
+
 });
 
-Route::get('/surat-masuk/daftar', [SuratMasukController::class, 'daftar'])
-    ->name('surat-masuk.daftar');
+
+/*
+|--------------------------------------------------------------------------
+| SURAT KELUAR
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+
+    Route::prefix('surat-keluar')->name('surat-keluar.')->group(function () {
+        Route::get('daftar', [SuratKeluarController::class, 'daftar'])->name('daftar');
+        Route::get('create', [SuratKeluarController::class, 'create'])->name('create');
+        Route::post('/', [SuratKeluarController::class, 'store'])->name('store');
+    });
+
+});
 
 
-Route::get('/surat-keluar/daftar', [SuratKeluarController::class, 'daftar'])
-    ->name('surat-keluar.daftar');
-    
+/*
+|--------------------------------------------------------------------------
+| PEGAWAI
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->prefix('pegawai')->name('pegawai.')->group(function () {
 
-Route::resource('surat-keluar', SuratKeluarController::class)
-    ->only(['create','store']);
+    Route::get('/', [PegawaiController::class, 'index'])->name('index');
+    Route::get('daftar', [PegawaiController::class, 'daftar'])->name('daftar');
+    Route::post('/', [PegawaiController::class, 'store'])->name('store');
 
+    Route::get('{pegawai}', [PegawaiController::class, 'show'])->name('show');
+    Route::delete('{pegawai}', [PegawaiController::class, 'destroy'])->name('destroy');
 
-
-
-Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
-Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
-Route::get('/pegawai/daftar', [PegawaiController::class, 'daftar'])->name('pegawai.daftar');
-Route::delete('/pegawai/{pegawai}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
-
-Route::get('/pegawai/{pegawai}', [PegawaiController::class, 'show'])
-    ->name('pegawai.show');
+});
 
 
+/*
+|--------------------------------------------------------------------------
+| TEMPLATE SURAT
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->prefix('template-surat')->name('template-surat.')->group(function () {
 
-Route::get('/template-surat', [TemplateSuratController::class, 'index'])
-    ->name('template-surat.index');
+    Route::get('/', [TemplateSuratController::class, 'index'])->name('index');
+    Route::get('tambah', [TemplateSuratController::class, 'create'])->name('create');
+    Route::post('/', [TemplateSuratController::class, 'store'])->name('store');
 
-Route::get('/template-surat/tambah', [TemplateSuratController::class, 'create'])
-    ->name('template-surat.create');
+    Route::get('download/{template}', [TemplateSuratController::class, 'download'])
+        ->name('download');
 
-Route::post('/template-surat', [TemplateSuratController::class, 'store'])
-    ->name('template-surat.store');
+    Route::delete('{template}', [TemplateSuratController::class, 'destroy'])
+        ->name('destroy');
 
-Route::get('/template-surat/download/{template}', [TemplateSuratController::class, 'download'])
-    ->name('template-surat.download');
-
-Route::delete('/template-surat/{template}', [TemplateSuratController::class, 'destroy'])
-    ->name('template-surat.destroy');
-
-
-
-
+});
