@@ -1,26 +1,18 @@
 <div class="sidebar-modern">
 
-    {{-- HEADER --}}
-    <div class="sidebar-header">
-        <img src="{{ asset('images/logo-ende.png') }}" alt="Logo">
-        <div>
-            <div class="sidebar-title">
-                DINAS PENANAMAN MODAL DAN PELAYANAN TERPADU SATU PINTU
-            </div>
-            <small>Kabupaten Ende</small>
+    {{-- HEADER DASHBOARD (CLICKABLE) --}}
+    <a href="{{ route('home') }}" class="sidebar-top">
+        <div class="dashboard-icon">
+            <i class="bi bi-house-door"></i>
         </div>
-    </div>
+        <div class="dashboard-text">DASHBOARD</div>
+    </a>
+
+    {{-- DIVIDER --}}
+    <div class="sidebar-divider"></div>
 
     {{-- MENU --}}
     <ul class="sidebar-menu">
-
-        {{-- DASHBOARD --}}
-        <li>
-            <a href="{{ route('home') }}"
-               class="menu-item {{ request()->routeIs('home') ? 'active' : '' }}">
-                Dashboard
-            </a>
-        </li>
 
         {{-- ARSIP SURAT --}}
         <li class="menu-section">ARSIP SURAT</li>
@@ -28,14 +20,16 @@
         <li>
             <a href="{{ route('surat-masuk.create') }}"
                class="menu-item {{ request()->routeIs('surat-masuk.*') ? 'active' : '' }}">
-                Surat Masuk
+                <i class="bi bi-envelope"></i>
+                <span>Surat Masuk</span>
             </a>
         </li>
 
         <li>
             <a href="{{ route('surat-keluar.create') }}"
                class="menu-item {{ request()->routeIs('surat-keluar.*') ? 'active' : '' }}">
-                Surat Keluar
+                <i class="bi bi-envelope-paper"></i>
+                <span>Surat Keluar</span>
             </a>
         </li>
 
@@ -45,14 +39,16 @@
         <li>
             <a href="{{ route('pegawai.index') }}"
                class="menu-item {{ request()->routeIs('pegawai.index') ? 'active' : '' }}">
-                Tambah Pegawai
+                <i class="bi bi-person-plus"></i>
+                <span>Tambah Pegawai</span>
             </a>
         </li>
 
         <li>
             <a href="{{ route('pegawai.daftar') }}"
                class="menu-item {{ request()->routeIs('pegawai.daftar') ? 'active' : '' }}">
-                Daftar Pegawai
+                <i class="bi bi-people"></i>
+                <span>Daftar Pegawai</span>
             </a>
         </li>
 
@@ -61,24 +57,28 @@
 
         <li>
             <a href="{{ route('home') }}"
-               class="menu-item">
-                Surat Tugas & SPPD
+               class="menu-item {{ request()->routeIs('home') ? 'active' : '' }}">
+                <i class="bi bi-briefcase"></i>
+                <span>Surat Tugas &amp; SPPD</span>
             </a>
         </li>
 
-        {{-- TEMPLATE --}}
-        <li class="menu-section">TEMPLATE</li>
+        {{-- LAINNYA --}}
+        <li class="menu-section">LAINNYA</li>
 
         <li>
             <a href="{{ route('template-surat.index') }}"
                class="menu-item {{ request()->routeIs('template-surat.*') ? 'active' : '' }}">
-                Template Surat
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Template Surat</span>
             </a>
         </li>
 
     </ul>
 
 </div>
+
+
 
 <style>
 /* ===============================
@@ -88,39 +88,71 @@
     width: 280px;
     min-width: 280px;
     padding: 22px;
-    flex-shrink: 0;
-    color: #fff;
     background: linear-gradient(
         180deg,
         #2563eb 0%,
-        #1e40af 55%,
+        #1e40af 60%,
         #1e3a8a 100%
     );
 }
 
 /* ===============================
-   HEADER
+   DASHBOARD HEADER (CLICKABLE)
 ================================ */
-.sidebar-header {
+.sidebar-top {
+    display: block;
+    text-align: center;
+    margin-bottom: 16px;
+    text-decoration: none;
+}
+
+.dashboard-icon {
+    width: 56px;
+    height: 56px;
+    margin: auto;
+    border-radius: 16px;
+    background: rgba(255,255,255,.15);
     display: flex;
-    gap: 14px;
-    margin-bottom: 32px;
+    align-items: center;
+    justify-content: center;
+    transition: all .25s ease;
 }
 
-.sidebar-header img {
-    width: 54px;
-    object-fit: contain;
+.dashboard-icon i {
+    font-size: 26px;
+    color: #d1d5db;
 }
 
-.sidebar-title {
-    font-size: 12px;
+.dashboard-text {
+    margin-top: 10px;
+    font-size: 13px;
     font-weight: 700;
-    line-height: 1.4;
+    letter-spacing: 1px;
+    color: #e5e7eb;
+    transition: color .25s ease;
 }
 
-.sidebar-header small {
-    font-size: 11px;
-    opacity: .85;
+/* HOVER HEADER */
+.sidebar-top:hover .dashboard-icon {
+    background: rgba(255,255,255,.25);
+    transform: translateY(-2px);
+}
+
+.sidebar-top:hover .dashboard-icon i {
+    color: #ffffff;
+}
+
+.sidebar-top:hover .dashboard-text {
+    color: #ffffff;
+}
+
+/* ===============================
+   DIVIDER
+================================ */
+.sidebar-divider {
+    height: 1px;
+    background: rgba(255,255,255,.18);
+    margin: 18px 0 22px;
 }
 
 /* ===============================
@@ -132,39 +164,41 @@
     margin: 0;
 }
 
-/* SECTION LABEL */
 .menu-section {
     margin: 22px 12px 10px;
     font-size: 11px;
     letter-spacing: 1px;
-    opacity: .6;
+    color: rgba(255,255,255,.6);
 }
 
-/* MENU ITEM */
 .menu-item {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     padding: 10px 14px;
     margin-bottom: 6px;
     font-size: 14px;
-    color: rgba(255,255,255,.88);
     text-decoration: none;
     border-radius: 12px;
-    transition:
-        background .25s ease,
-        transform .25s ease,
-        color .25s ease;
+    color: rgba(255,255,255,.85);
+    transition: background .25s ease, transform .25s ease;
 }
 
-/* HOVER */
+.menu-item i {
+    font-size: 16px;
+    color: #d1d5db;
+}
+
 .menu-item:hover {
     background: rgba(255,255,255,.18);
-    color: #fff;
     transform: translateX(6px);
 }
 
-/* ACTIVE */
 .menu-item.active {
-    background: rgba(255,255,255,.28);
-    color: #fff;
+    background: rgba(255,255,255,.3);
+}
+
+.menu-item.active i {
+    color: #ffffff;
 }
 </style>

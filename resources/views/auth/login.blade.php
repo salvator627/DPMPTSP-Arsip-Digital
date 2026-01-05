@@ -174,5 +174,4 @@
     }
 }
 </style>
-
 @endsection
