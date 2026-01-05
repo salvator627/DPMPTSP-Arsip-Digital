@@ -94,20 +94,17 @@
 
                         {{-- ACTION --}}
                         <div class="d-flex flex-wrap justify-content-end gap-2">
-                            <button type="reset"
-                                    class="btn btn-soft-secondary rounded-pill px-4">
-                                Reset
-                            </button>
+                           
 
                             <a href="{{ route('surat-masuk.daftar') }}"
-                               class="btn btn-soft-primary rounded-pill px-4">
+                               class="btn btn-soft-primary rounded-pill px-5">
                                 Daftar Surat
                             </a>
 
-                            <button type="submit"
-                                    class="btn btn-primary rounded-pill px-5">
+                           <x-button type="submit" class="px-5">
                                 Simpan
-                            </button>
+                            </x-button>
+
                         </div>
 
                     </form>

@@ -11,7 +11,7 @@
                  alt="Logo Kabupaten Ende"
                  class="login-logo mb-3">
 
-            <h6 class="fw-bold text-danger mb-1">
+            <h6 class="fw-semibold text-dark mb-1">
                 DINAS PENANAMAN MODAL DAN PELAYANAN TERPADU SATU PINTU
             </h6>
             <small class="text-muted">
@@ -24,10 +24,10 @@
             @csrf
 
             {{-- EMAIL --}}
-            <div class="form-group mb-3">
-                <label class="form-label">Email</label>
+            <div class="mb-3">
+                <label class="form-label small">Email</label>
                 <div class="input-icon">
-                    <span>📧</span>
+                    <i class="bi bi-envelope"></i>
                     <input type="email"
                            name="email"
                            class="form-control @error('email') is-invalid @enderror"
@@ -41,10 +41,10 @@
             </div>
 
             {{-- PASSWORD --}}
-            <div class="form-group mb-3">
-                <label class="form-label">Password</label>
+            <div class="mb-3">
+                <label class="form-label small">Password</label>
                 <div class="input-icon">
-                    <span>🔒</span>
+                    <i class="bi bi-lock"></i>
                     <input type="password"
                            name="password"
                            class="form-control @error('password') is-invalid @enderror"
@@ -58,12 +58,11 @@
 
             {{-- REMEMBER --}}
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="form-check">
+                <div class="form-check small">
                     <input class="form-check-input"
                            type="checkbox"
                            name="remember"
-                           id="remember"
-                           {{ old('remember') ? 'checked' : '' }}>
+                           id="remember">
                     <label class="form-check-label" for="remember">
                         Ingat saya
                     </label>
@@ -71,54 +70,51 @@
 
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}"
-                       class="text-decoration-none small">
+                       class="small text-decoration-none">
                         Lupa password?
                     </a>
                 @endif
             </div>
 
             {{-- BUTTON --}}
-            <button type="submit" class="btn btn-login w-100">
-                 Masuk
-            </button>
+            <x-button type="submit" class="btn btn-login w-100 mb-3">
+                Masuk
+            </x-button>
+
+            {{-- REGISTER LINK --}}
+            @if (Route::has('register'))
+            <p class="text-center small text-muted mb-0">
+                Belum punya akun?
+                <a href="{{ route('register') }}" class="text-decoration-none fw-semibold">
+                    Daftar
+                </a>
+            </p>
+            @endif
         </form>
 
     </div>
 </div>
 
-{{-- STYLE --}}
 <style>
 /* WRAPPER */
 .login-wrapper {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f8f9fa, #eef2f7);
+    background: #f4f6fb; /* SAMA DENGAN DASHBOARD */
 }
 
 /* CARD */
 .login-card {
     width: 100%;
-    max-width: 520px; /* ⬅️ LEBIH BESAR */
-    background: #fff;
-    border-radius: 20px;
-    padding: 44px; /* ⬅️ LEBIH LEGA */
-    box-shadow: 0 22px 50px rgba(0,0,0,.08);
+    max-width: 520px;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 44px;
+    box-shadow: 0 18px 45px rgba(0,0,0,.08);
 }
 
 /* LOGO */
 .login-logo {
-    width: 140px; /* ⬅️ LEBIH BESAR */
-}
-
-/* HEADER TEXT */
-.login-card h6 {
-    font-size: 15px;
-    letter-spacing: .6px;
-    line-height: 1.5;
-}
-
-.login-card small {
-    font-size: 13px;
-    letter-spacing: .8px;
+    width: 130px;
 }
 
 /* INPUT ICON */
@@ -126,47 +122,46 @@
     position: relative;
 }
 
-.input-icon span {
+.input-icon i {
     position: absolute;
     left: 16px;
     top: 50%;
     transform: translateY(-50%);
-    opacity: .6;
-    font-size: 15px;
+    color: #9ca3af;
+    font-size: 16px;
 }
 
 .input-icon input {
-    padding-left: 48px;
+    padding-left: 46px;
     height: 46px;
-    border-radius: 14px;
+    border-radius: 12px;
 }
 
 /* BUTTON */
 .btn-login {
-    background: #dc3545;
+    background: #2563eb;
     color: #fff;
     padding: 14px;
-    border-radius: 50px;
+    border-radius: 12px;
     font-weight: 600;
-    font-size: 15px;
     transition: all .25s ease;
 }
 
 .btn-login:hover {
-    background: #bb2d3b;
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(220,53,69,.3);
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(37,99,235,.3);
 }
 
 /* ANIMATION */
 .animate-fade {
-    animation: fadeUp .6s ease;
+    animation: fadeUp .5s ease;
 }
 
 @keyframes fadeUp {
     from {
         opacity: 0;
-        transform: translateY(12px);
+        transform: translateY(10px);
     }
     to {
         opacity: 1;

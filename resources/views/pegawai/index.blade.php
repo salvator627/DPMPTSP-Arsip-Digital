@@ -137,14 +137,14 @@
                         {{-- ACTION --}}
                         <div class="d-flex flex-wrap justify-content-end gap-2 mt-4">
                             <a href="{{ route('pegawai.daftar') }}"
-                               class="btn btn-soft-secondary rounded-pill px-4">
+                               class="btn btn-soft-secondary rounded-pill px-5">
                                 Daftar Pegawai
                             </a>
 
-                            <button type="submit"
-                                    class="btn btn-primary rounded-pill px-5">
+                            <x-button type="submit"
+                                    class="btn-login px-5">
                                 Simpan Pegawai
-                            </button>
+                            </x-button>
                         </div>
 
                     </form>
