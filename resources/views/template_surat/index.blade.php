@@ -10,10 +10,14 @@
             <small class="text-muted">Kelola template surat yang tersedia</small>
         </div>
 
+        @auth
+        @if(auth()->user()->role === 'admin')
         <a href="{{ route('template-surat.create') }}"
            class="btn btn-primary rounded-pill px-4">
             ➕ Tambah Template
         </a>
+        @endif
+        @endauth
     </div>
 
     {{-- SEARCH --}}
@@ -55,7 +59,8 @@
                                    class="btn btn-sm btn-soft success me-1">
                                     ⬇ Download
                                 </a>
-
+                                @auth
+                                @if(auth()->user()->role === 'admin')
                                 <form action="{{ route('template-surat.destroy', $t->id) }}"
                                       method="POST"
                                       class="d-inline">
@@ -66,6 +71,8 @@
                                         🗑 Hapus
                                     </button>
                                 </form>
+                                @endif
+                                @endauth
                             </td>
                         </tr>
                     @empty

@@ -36,6 +36,8 @@
         {{-- PEGAWAI --}}
         <li class="menu-section">PEGAWAI</li>
 
+        @auth
+        @if(auth()->user()->role === 'admin')
         <li>
             <a href="{{ route('pegawai.index') }}"
                class="menu-item {{ request()->routeIs('pegawai.index') ? 'active' : '' }}">
@@ -43,6 +45,8 @@
                 <span>Tambah Pegawai</span>
             </a>
         </li>
+        @endif
+        @endauth
 
         <li>
             <a href="{{ route('pegawai.daftar') }}"

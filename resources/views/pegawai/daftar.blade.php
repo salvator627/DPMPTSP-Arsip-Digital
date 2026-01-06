@@ -12,11 +12,16 @@
             </small>
         </div>
 
+        @auth
+        @if(auth()->user()->role === 'admin')
         <a href="{{ route('pegawai.index') }}"
            class="btn btn-primary rounded-pill px-4">
             ➕ Tambah Pegawai
         </a>
+        @endif
+        @endauth
     </div>
+  
 
     {{-- SEARCH --}}
     <div class="card card-minimal mb-4 animate-fade">
@@ -69,6 +74,8 @@
                                             👁 Detail
                                         </a>
 
+                                        @auth
+                                        @if(auth()->user()->role === 'admin')
                                         <form action="{{ route('pegawai.destroy', $p->id) }}"
                                               method="POST"
                                               class="d-inline"
@@ -79,6 +86,8 @@
                                                 🗑 Hapus
                                             </button>
                                         </form>
+                                         @endif
+                                        @endauth
 
                                     </div>
                                 </td>

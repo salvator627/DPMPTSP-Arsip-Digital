@@ -12,7 +12,7 @@
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-lg-10 col-xl-9">
+        <div class="col-12 col-xl-10 col-xxl-9">
 
             <div class="card card-minimal animate-fade">
                 <div class="card-body p-4 p-md-5">

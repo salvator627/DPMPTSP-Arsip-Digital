@@ -72,6 +72,12 @@ Route::middleware('auth')->prefix('pegawai')->name('pegawai.')->group(function (
     Route::get('{pegawai}', [PegawaiController::class, 'show'])->name('show');
     Route::delete('{pegawai}', [PegawaiController::class, 'destroy'])->name('destroy');
 
+    Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/pegawai/create', [PegawaiController::class, 'create']);
+    Route::post('/pegawai', [PegawaiController::class, 'store']);
+});
+
+
 });
 
 
