@@ -10,7 +10,7 @@
             Selamat datang, {{ Auth::user()->name }}
         </h2>
         <p class="text-muted mb-0">
-            Berikut ringkasan pengelolaan data dan surat
+            Berikut ringkasan pengelolaan data dan surat DPMPTSP Kabupaten Ende
         </p>
     </div>
 

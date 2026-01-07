@@ -78,6 +78,8 @@
             </a>
         </li>
 
+        @auth
+        @if(auth()->user()->role === 'admin')
         <li>
             <a href="{{ route('admin.users.create') }}"
             class="menu-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
@@ -85,6 +87,8 @@
             <span>Tambahkan Pengguna</span>
         </a>
         </li>
+        @endif
+        @endauth
 
     </ul>
 

@@ -82,14 +82,7 @@
             </x-button>
 
             {{-- REGISTER LINK --}}
-            @if (Route::has('register'))
-            <p class="text-center small text-muted mb-0">
-                Belum punya akun?
-                <a href="{{ route('register') }}" class="text-decoration-none fw-semibold">
-                    Daftar
-                </a>
-            </p>
-            @endif
+            
         </form>
 
     </div>
