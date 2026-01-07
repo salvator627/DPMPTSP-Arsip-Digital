@@ -8,6 +8,7 @@ use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\SuratKeluarController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\TemplateSuratController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,5 +98,17 @@ Route::middleware('auth')->prefix('template-surat')->name('template-surat.')->gr
 
     Route::delete('{template}', [TemplateSuratController::class, 'destroy'])
         ->name('destroy');
+
+});
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/pengguna/tambah', [UserController::class, 'create'])
+            ->name('admin.users.create');
+
+        Route::post('/admin/pengguna', [UserController::class, 'store'])
+            ->name('admin.users.store');
+    });
 
 });

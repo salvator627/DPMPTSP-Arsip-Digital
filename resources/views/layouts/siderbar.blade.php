@@ -78,6 +78,14 @@
             </a>
         </li>
 
+        <li>
+            <a href="{{ route('admin.users.create') }}"
+            class="menu-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+            <i class="bi bi-person-plus"></i>
+            <span>Tambahkan Pengguna</span>
+        </a>
+        </li>
+
     </ul>
 
 </div>
