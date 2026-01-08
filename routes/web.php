@@ -9,6 +9,7 @@ use App\Http\Controllers\SuratKeluarController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\TemplateSuratController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\SuratController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,3 +113,17 @@ Route::middleware(['auth'])->group(function () {
     });
 
 });
+
+
+
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/surat/create', [SuratController::class, 'create'])->name('surat.create');
+    Route::post('/surat', [SuratController::class, 'store'])->name('surat.store');
+
+    
+    Route::get('/surat', [SuratController::class, 'index'])
+    ->name('surat.index');
+});
+

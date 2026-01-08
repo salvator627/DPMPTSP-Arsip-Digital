@@ -60,12 +60,20 @@
         <li class="menu-section">SURAT TUGAS</li>
 
         <li>
-            <a href="{{ route('home') }}"
-               class="menu-item {{ request()->routeIs('home') ? 'active' : '' }}">
-                <i class="bi bi-briefcase"></i>
-                <span>Surat Tugas &amp; SPPD</span>
-            </a>
-        </li>
+        <a href="{{ route('surat.create') }}"
+       class="menu-item {{ request()->routeIs('surat.create') ? 'active' : '' }}">
+        <i class="bi bi-briefcase"></i>
+        <span>Surat Tugas &amp; SPPD</span>
+    </a>
+    </li>
+    <li>
+        <a href="{{ route('surat.index') }}"
+       class="menu-item {{ request()->routeIs('surat.index') ? 'active' : '' }}">
+        <i class="bi bi-envelope"></i>
+        <span>Daftar Surat Tugas Dan SPPD</span>
+    </a>
+    </li>
+
 
         {{-- LAINNYA --}}
         <li class="menu-section">LAINNYA</li>
