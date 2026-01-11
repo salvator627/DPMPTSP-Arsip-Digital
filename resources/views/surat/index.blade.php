@@ -24,7 +24,7 @@
                 <table class="table align-middle table-hover">
                     <thead class="table-light small text-uppercase">
                         <tr>
-                            <th>Nomor Surat</th>
+                            <th>Nomor Urut</th>
                             <th>Jenis Surat</th>
                             <th class="col-nama">Nama Pegawai</th>
                             <th>Tujuan</th>
