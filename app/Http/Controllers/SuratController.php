@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Surat;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class SuratController extends Controller
@@ -18,109 +19,133 @@ class SuratController extends Controller
         ][$bulan];
     }
 
+    /* =========================
+     * LIST SURAT
+     * ========================= */
+    public function index()
+    {
+        $surat = Surat::with('pegawai')
+            ->orderBy('tanggal_surat', 'desc')
+            ->get();
+
+        return view('surat.index', compact('surat'));
+    }
+
+    /* =========================
+     * FORM CREATE
+     * ========================= */
     public function create()
     {
-        $tahun = now()->year;
-        $bulanRomawi = $this->bulanRomawi(now()->month);
-
-        $lastSurat = Surat::whereYear('tanggal_surat', $tahun)
-            ->orderBy('id', 'desc')
-            ->first();
-
-        $noUrut = $lastSurat ? ((int) $lastSurat->nomor + 1) : 1;
-        $noUrutFormat = str_pad($noUrut, 3, '0', STR_PAD_LEFT);
-
-        $previewNomorSurat =
-            "DPMPTSP.570/BID.I/{$noUrutFormat}/{$bulanRomawi}/{$tahun}";
-
         $pegawai = Pegawai::orderBy('nama')->get();
 
+        // PREVIEW NOMOR SURAT (BERDASARKAN TANGGAL HARI INI)
+        $tanggal = now();
+        $tahun = $tanggal->year;
+        $bulanRomawi = $this->bulanRomawi($tanggal->month);
+
+        $lastSurat = Surat::whereYear('tanggal_surat', $tahun)
+            ->orderBy('nomor', 'desc')
+            ->first();
+
+        $noUrut = $lastSurat ? $lastSurat->nomor + 1 : 1;
+
+        $previewNomorSurat =
+            'DPMPTSP.570/BID.I/' .
+            str_pad($noUrut, 3, '0', STR_PAD_LEFT) .
+            "/{$bulanRomawi}/{$tahun}";
+
         return view('surat.create', compact(
-            'previewNomorSurat',
-            'pegawai'
+            'pegawai',
+            'previewNomorSurat'
         ));
     }
 
+    /* =========================
+     * SIMPAN SURAT
+     * ========================= */
     public function store(Request $request)
     {
         $request->validate([
-            'jenis_surat' => 'required|in:surat_tugas,sppd',
-
+            'tanggal_surat' => 'required|date',
             'pegawai_id' => 'required|array|min:1',
             'pegawai_id.*' => 'exists:pegawais,id',
-
-            'tanggal_surat' => 'required|date',
             'tanggal_berangkat' => 'required|date',
             'tanggal_pulang' => 'required|date|after_or_equal:tanggal_berangkat',
-
             'tujuan' => 'required|string',
             'perihal' => 'nullable|string',
+            'perjalanan_luar_kota' => 'nullable|boolean',
         ]);
 
-        // aturan SPPD hanya 1 pegawai
-        if ($request->jenis_surat === 'sppd' && count($request->pegawai_id) > 1) {
-            return back()->withErrors([
-                'pegawai_id' => 'SPPD hanya boleh satu pegawai'
-            ])->withInput();
-        }
+        DB::transaction(function () use ($request) {
 
-        // ===============================
-        // HITUNG LAMA PERJALANAN (AMAN)
-        // ===============================
-        $tanggalBerangkat = Carbon::parse($request->tanggal_berangkat);
-        $tanggalPulang    = Carbon::parse($request->tanggal_pulang);
+            // Lama perjalanan (inklusif)
+            $lama = Carbon::parse($request->tanggal_berangkat)
+                ->diffInDays(Carbon::parse($request->tanggal_pulang)) + 1;
 
-        $lamaPerjalanan = $tanggalBerangkat->diffInDays($tanggalPulang) + 1;
+            // Penomoran berdasar tanggal surat
+            $tanggalSurat = Carbon::parse($request->tanggal_surat);
+            $tahun = $tanggalSurat->year;
+            $bulanRomawi = $this->bulanRomawi($tanggalSurat->month);
 
-        // ===============================
-        // GENERATE NOMOR SURAT
-        // ===============================
-        $tahun = Carbon::parse($request->tanggal_surat)->year;
-        $bulan = $this->bulanRomawi(Carbon::parse($request->tanggal_surat)->month);
+            $lastSurat = Surat::whereYear('tanggal_surat', $tahun)
+                ->orderBy('nomor', 'desc')
+                ->first();
 
-        $lastSurat = Surat::whereYear('tanggal_surat', $tahun)
-            ->orderBy('id', 'desc')
-            ->first();
+            $nomorUrut = $lastSurat ? $lastSurat->nomor + 1 : 1;
 
-        $noUrut = $lastSurat ? ((int) $lastSurat->nomor + 1) : 1;
-        $noUrutFormat = str_pad($noUrut, 3, '0', STR_PAD_LEFT);
+            /* =========================
+             * SURAT TUGAS (INDUK)
+             * ========================= */
+            $nomorSurat = "DPMPTSP.570/BID.I/" .
+                str_pad($nomorUrut, 3, '0', STR_PAD_LEFT) .
+                "/{$bulanRomawi}/{$tahun}";
 
-        $nomorSuratTugas =
-            "DPMPTSP.570/BID.I/{$noUrutFormat}/{$bulan}/{$tahun}";
+            $suratTugas = Surat::create([
+                'nomor' => $nomorUrut,
+                'jenis_surat' => 'surat_tugas',
+                'tanggal_surat' => $request->tanggal_surat,
+                'tanggal_berangkat' => $request->tanggal_berangkat,
+                'tanggal_pulang' => $request->tanggal_pulang,
+                'lama_perjalanan' => $lama,
+                'tujuan' => $request->tujuan,
+                'perihal' => $request->perihal,
+                'nomor_surat_tugas' => $nomorSurat,
+                'perjalanan_luar_kota' => $request->boolean('perjalanan_luar_kota'),
+            ]);
 
-        // ===============================
-        // SIMPAN SURAT
-        // ===============================
-        $surat = Surat::create([
-            'nomor' => $noUrut,
-            'nomor_surat_tugas' => $nomorSuratTugas,
-            'jenis_surat' => $request->jenis_surat,
+            $suratTugas->pegawai()->sync($request->pegawai_id);
 
-            'tanggal_surat' => $request->tanggal_surat,
-            'tanggal_berangkat' => $request->tanggal_berangkat,
-            'tanggal_pulang' => $request->tanggal_pulang,
+            /* =========================
+             * AUTO SPPD
+             * ========================= */
+            if ($request->boolean('perjalanan_luar_kota')) {
+                foreach ($request->pegawai_id as $pegawaiId) {
+                    $nomorUrut++;
 
-            'lama_perjalanan' => $lamaPerjalanan,
+                    $nomorSPPD = "DPMPTSP.570/BID.I/" .
+                        str_pad($nomorUrut, 3, '0', STR_PAD_LEFT) .
+                        "/{$bulanRomawi}/{$tahun}";
 
-            'tujuan' => $request->tujuan,
-            'perihal' => $request->perihal,
-        ]);
+                    $sppd = Surat::create([
+                        'nomor' => $nomorUrut,
+                        'jenis_surat' => 'sppd',
+                        'tanggal_surat' => $request->tanggal_surat,
+                        'tanggal_berangkat' => $request->tanggal_berangkat,
+                        'tanggal_pulang' => $request->tanggal_pulang,
+                        'lama_perjalanan' => $lama,
+                        'tujuan' => $request->tujuan,
+                        'perihal' => $request->perihal,
+                        'nomor_surat_tugas' => $nomorSPPD,
+                        'perjalanan_luar_kota' => true,
+                    ]);
 
-        $surat->pegawai()->sync($request->pegawai_id);
+                    $sppd->pegawai()->sync([$pegawaiId]);
+                }
+            }
+        });
 
         return redirect()
             ->route('surat.create')
-            ->with('success', 'Surat berhasil disimpan');
+            ->with('success', 'Surat tugas & SPPD berhasil dibuat');
     }
-
-      public function index()
-{
-    $surat = Surat::with('pegawai')
-        ->orderBy('tanggal_surat', 'desc')
-        ->get();
-
-    return view('surat.index', compact('surat'));
 }
-}
-
-
