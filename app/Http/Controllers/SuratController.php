@@ -22,14 +22,14 @@ class SuratController extends Controller
     /* =========================
      * LIST SURAT
      * ========================= */
-    public function index()
-    {
-        $surat = Surat::with('pegawai')
-            ->orderBy('tanggal_surat', 'desc')
-            ->get();
+  public function index()
+{
+    $surat = Surat::with('pegawai')
+        ->orderBy('nomor', 'asc') // ⬅️ KUNCI UTAMA
+        ->get();
 
-        return view('surat.index', compact('surat'));
-    }
+    return view('surat.index', compact('surat'));
+}
 
     /* =========================
      * FORM CREATE
