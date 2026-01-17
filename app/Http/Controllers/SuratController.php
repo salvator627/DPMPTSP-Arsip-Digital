@@ -7,9 +7,85 @@ use App\Models\Pegawai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class SuratController extends Controller
 {
+    public function cetakSuratTugas($id)
+{
+    $surat = Surat::with('pegawai')->findOrFail($id);
+
+    // Load template
+    $template = new TemplateProcessor(
+        storage_path('app/templates/surat_tugas.docx')
+    );
+
+    // =========================
+    // DATA DINAMIS
+    // =========================
+
+    // Nomor surat
+    $template->setValue('nomor_surat', $surat->nomor_surat_tugas);
+
+    // Dasar (tetap atau dari DB)
+    $template->setValue(
+        'dasar',
+        'DPA Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu Kabupaten Ende Tentang Perjalanan Dinas Dalam Daerah Tahun Anggaran ' .
+        Carbon::parse($surat->tanggal_surat)->year
+    );
+
+    // =========================
+    // LIST PEGAWAI
+    // =========================
+$pegawaiText = '';
+$no = 1;
+
+// lebar kolom nomor (misal: "1.   " = 5 karakter)
+$nomorWidth = 6;
+
+foreach ($surat->pegawai as $p) {
+    $nomor = str_pad($no . '.', $nomorWidth, ' ', STR_PAD_RIGHT);
+
+    $pegawaiText .=
+                        $nomor       . "Nama               :  {$p->nama}\n" .
+        str_repeat(' ', $nomorWidth) . "NIP                :  {$p->nip}\n" .
+        str_repeat(' ', $nomorWidth) . "Pangkat/Gol        :  {$p->pangkat}\n" .
+        str_repeat(' ', $nomorWidth) . "Jabatan            :  {$p->jabatan}\n\n";
+
+    $no++;
+}
+
+$template->setValue('pegawai_list', $pegawaiText);
+
+
+    // =========================
+    // PERIHAL / UNTUK
+    // =========================
+    $template->setValue('perihal', $surat->perihal);
+
+    // =========================
+    // TANGGAL
+    // =========================
+    $template->setValue(
+        'tanggal_surat',
+        Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y')
+    );
+
+    // =========================
+    // SIMPAN & DOWNLOAD
+    // =========================
+    $fileName = 'Surat_Tugas_' . str_replace('/', '_', $surat->nomor_surat_tugas) . '.docx';
+    $path = storage_path('app/temp/' . $fileName);
+
+    if (!file_exists(storage_path('app/temp'))) {
+        mkdir(storage_path('app/temp'), 0777, true);
+    }
+
+    $template->saveAs($path);
+
+    return response()->download($path)->deleteFileAfterSend(true);
+}
+
     private function bulanRomawi(int $bulan): string
     {
         return [

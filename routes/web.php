@@ -127,3 +127,7 @@ Route::middleware(['auth'])->group(function () {
     ->name('surat.index');
 });
 
+Route::get('/surat/{id}/cetak-surat-tugas', 
+    [SuratController::class, 'cetakSuratTugas']
+)->name('surat.cetak.surat_tugas');
+
