@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use PhpOffice\PhpWord\Element\Table;
+use PhpOffice\PhpWord\SimpleType\TblWidth;
+use PhpOffice\PhpWord\SimpleType\Jc;
+
+
+
 use App\Models\Surat;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
@@ -37,26 +43,96 @@ class SuratController extends Controller
     // =========================
     // LIST PEGAWAI
     // =========================
-$pegawaiText = '';
+
+$fontStyle = [
+    'name' => 'Times New Roman',
+    'size' => 12,
+];
+
+$paragraphStyle = [
+    'spacing' => 80,      // ⬅️ PALING RAPAT (default 240)
+    'spaceBefore' => 0,
+    'spaceAfter' => 0,
+    'lineHeight' => 1.0,  
+];
+
+// BUAT TABLE TANPA BORDER
+$table = new Table([
+    'borderSize' => 0,
+    'borderColor' => 'FFFFFF',
+    'width' => 100 * 50,
+    'unit' => TblWidth::PERCENT,
+    'alignment' => Jc::START,
+    'cellMargin' => 50, // PENTING: biar rapat
+]);
+
 $no = 1;
+$rowHeight    = 140;
+$spacerHeight = 40;
 
-// lebar kolom nomor (misal: "1.   " = 5 karakter)
-$nomorWidth = 6;
+foreach ($surat->pegawai as $i => $p) {
 
-foreach ($surat->pegawai as $p) {
-    $nomor = str_pad($no . '.', $nomorWidth, ' ', STR_PAD_RIGHT);
+    // ===== BARIS NAMA =====
+    $table->addRow($rowHeight);
 
-    $pegawaiText .=
-                        $nomor       . "Nama               :  {$p->nama}\n" .
-        str_repeat(' ', $nomorWidth) . "NIP                :  {$p->nip}\n" .
-        str_repeat(' ', $nomorWidth) . "Pangkat/Gol        :  {$p->pangkat}\n" .
-        str_repeat(' ', $nomorWidth) . "Jabatan            :  {$p->jabatan}\n\n";
+    // KOLOM 1 : KEPADA
+    $table->addCell(2000)->addText(
+        $i === 0 ? 'Kepada' : '',
+        $fontStyle,
+        $paragraphStyle
+    );
 
-    $no++;
+    // KOLOM 2 : NOMOR
+    $table->addCell(800)->addText(
+        ($i + 1) . '.',
+        $fontStyle,
+        $paragraphStyle
+    );
+
+    // KOLOM 3 : LABEL
+    $table->addCell(2200)->addText(
+        'Nama',
+        $fontStyle,
+        $paragraphStyle
+    );
+
+    // KOLOM 4 : ISI
+    $table->addCell(6000)->addText(
+        ': ' . $p->nama,
+        $fontStyle,
+        $paragraphStyle
+    );
+
+    // ===== NIP =====
+    $table->addRow($rowHeight);
+    $table->addCell(2000)->addText('');
+    $table->addCell(800)->addText('');
+    $table->addCell(2200)->addText('NIP', $fontStyle, $paragraphStyle);
+    $table->addCell(6000)->addText(': ' . $p->nip, $fontStyle, $paragraphStyle);
+
+    // ===== PANGKAT =====
+    $table->addRow($rowHeight);
+    $table->addCell(2000)->addText('');
+    $table->addCell(800)->addText('');
+    $table->addCell(2200)->addText('Pangkat/Gol', $fontStyle, $paragraphStyle);
+    $table->addCell(6000)->addText(': ' . $p->pangkat, $fontStyle, $paragraphStyle);
+
+    // ===== JABATAN =====
+    $table->addRow($rowHeight);
+    $table->addCell(2000)->addText('');
+    $table->addCell(800)->addText('');
+    $table->addCell(2200)->addText('Jabatan', $fontStyle, $paragraphStyle);
+    $table->addCell(6000)->addText(': ' . $p->jabatan, $fontStyle, $paragraphStyle);
+
+    // ===== JARAK TIPIS ANTAR PEGAWAI =====
+    if ($i < count($surat->pegawai) - 1) {
+        $table->addRow($spacerHeight);
+        $table->addCell(11000, ['gridSpan' => 4])->addText('');
+    }
 }
 
-$template->setValue('pegawai_list', $pegawaiText);
 
+$template->setComplexBlock('pegawai_table', $table);
 
     // =========================
     // PERIHAL / UNTUK
