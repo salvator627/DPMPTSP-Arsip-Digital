@@ -14,6 +14,8 @@ class Surat extends Model
         'perihal',
         'jenis_surat',
         'tanggal_surat',
+        'tanggal_berangkat',
+        'tanggal_pulang',
         'lama_perjalanan',
         'tujuan',
         'nomor_surat_tugas',
