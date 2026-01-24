@@ -117,11 +117,13 @@
                 </a>
 
                 {{-- TOMBOL SPPD --}}
+                @if($item->jenis_surat == 'sppd')
                 <a id="btnSPPD"
-                   href="#"
+                   href="{{ route('surat.cetakSppd', $item->id) }}"
                    class="btn btn-success w-100 d-none">
                     Cetak SPPD
                 </a>
+                @endif
 
             </div>
 

@@ -131,3 +131,7 @@ Route::get('/surat/{id}/cetak-surat-tugas',
     [SuratController::class, 'cetakSuratTugas']
 )->name('surat.cetak.surat_tugas');
 
+Route::get('/surat/{id}/cetak-sppd', [SuratController::class, 'cetakSPPD'])
+    ->name('surat.cetakSppd');
+
+

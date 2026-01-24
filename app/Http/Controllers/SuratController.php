@@ -17,6 +17,39 @@ use PhpOffice\PhpWord\TemplateProcessor;
 
 class SuratController extends Controller
 {
+    public function cetakSPPD($id)
+{
+    $surat = Surat::with('pegawai')->findOrFail($id);
+    $pegawai = $surat->pegawai->first(); // SPPD cuma 1 pegawai
+
+    $template = new TemplateProcessor(storage_path('app/templates/template_sppd.docx'));
+
+    // ================= DATA DINAS =================
+    $template->setValue('nomor_sppd', $surat->nomor_surat_tugas);
+    $template->setValue('nama', $pegawai->nama);
+    $template->setValue('nip', $pegawai->nip);
+    $template->setValue('pangkat', $pegawai->pangkat);
+    $template->setValue('jabatan', $pegawai->jabatan);
+    $template->setValue('tujuan', $surat->tujuan);
+    $template->setValue('lama', $surat->lama_perjalanan);
+
+    $template->setValue('tgl_berangkat',
+        Carbon::parse($surat->tanggal_berangkat)->translatedFormat('d F Y'));
+    $template->setValue('tgl_pulang',
+        Carbon::parse($surat->tanggal_pulang)->translatedFormat('d F Y'));
+
+    $template->setValue('tanggal_surat',
+        Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y'));
+
+    // ================= SAVE FILE =================
+    $filename = 'SPPD-' . $pegawai->nama . '.docx';
+    $path = storage_path($filename);
+    $template->saveAs($path);
+
+    return response()->download($path)->deleteFileAfterSend(true);
+}
+
+
     public function cetakSuratTugas($id)
 {
     $surat = Surat::with('pegawai')->findOrFail($id);
