@@ -32,6 +32,7 @@ class SuratController extends Controller
     $template->setValue('jabatan', $pegawai->jabatan);
     $template->setValue('tujuan', $surat->tujuan);
     $template->setValue('lama', $surat->lama_perjalanan);
+    $template->setValue('perihal', $surat->perihal ?? '-');
 
     $template->setValue('tgl_berangkat',
         Carbon::parse($surat->tanggal_berangkat)->translatedFormat('d F Y'));
