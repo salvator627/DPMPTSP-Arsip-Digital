@@ -6,6 +6,7 @@ use PhpOffice\PhpWord\Element\Table;
 use PhpOffice\PhpWord\SimpleType\TblWidth;
 use PhpOffice\PhpWord\SimpleType\Jc;
 
+use Illuminate\Support\Str;
 
 
 use App\Models\Surat;
@@ -20,35 +21,58 @@ class SuratController extends Controller
     public function cetakSPPD($id)
 {
     $surat = Surat::with('pegawai')->findOrFail($id);
-    $pegawai = $surat->pegawai->first(); // SPPD cuma 1 pegawai
+    $pegawai = $surat->pegawai->first(); // SPPD hanya 1 pegawai
 
     $template = new TemplateProcessor(storage_path('app/templates/template_sppd.docx'));
 
+    // ================= FORMAT NAMA (GELAR TIDAK DIRUSAK) =================
+    $namaAsli = $pegawai->nama;
+
+    if (str_contains($namaAsli, ',')) {
+        [$namaDepan, $gelar] = explode(',', $namaAsli, 2);
+        $nama = Str::title(strtolower(trim($namaDepan))) . ',' . $gelar;
+    } else {
+        $nama = Str::title(strtolower($namaAsli));
+    }
+
+    // Format jabatan & pangkat
+    $jabatan = Str::title(strtolower($pegawai->jabatan));
+    $pangkat = Str::title(strtolower($pegawai->pangkat));
+
     // ================= DATA DINAS =================
     $template->setValue('nomor_sppd', $surat->nomor_surat_tugas);
-    $template->setValue('nama', $pegawai->nama);
+    $template->setValue('nama', $nama);
     $template->setValue('nip', $pegawai->nip);
-    $template->setValue('pangkat', $pegawai->pangkat);
-    $template->setValue('jabatan', $pegawai->jabatan);
+    $template->setValue('pangkat', $pangkat);
+    $template->setValue('jabatan', $jabatan);
     $template->setValue('tujuan', $surat->tujuan);
     $template->setValue('lama', $surat->lama_perjalanan);
     $template->setValue('perihal', $surat->perihal ?? '-');
 
-    $template->setValue('tgl_berangkat',
-        Carbon::parse($surat->tanggal_berangkat)->translatedFormat('d F Y'));
-    $template->setValue('tgl_pulang',
-        Carbon::parse($surat->tanggal_pulang)->translatedFormat('d F Y'));
+    $template->setValue(
+        'tgl_berangkat',
+        Carbon::parse($surat->tanggal_berangkat)->translatedFormat('d F Y')
+    );
 
-    $template->setValue('tanggal_surat',
-        Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y'));
+    $template->setValue(
+        'tgl_pulang',
+        Carbon::parse($surat->tanggal_pulang)->translatedFormat('d F Y')
+    );
+
+    $template->setValue(
+        'tanggal_surat',
+        Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y')
+    );
 
     // ================= SAVE FILE =================
-    $filename = 'SPPD-' . $pegawai->nama . '.docx';
+    $filename = 'SPPD-' . Str::slug($nama) . '.docx';
     $path = storage_path($filename);
+
     $template->saveAs($path);
 
     return response()->download($path)->deleteFileAfterSend(true);
 }
+
 
 
     public function cetakSuratTugas($id)
