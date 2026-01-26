@@ -25,34 +25,48 @@
 
     {{-- ================= NAVBAR ================= --}}
     @auth
-    <nav class="app-navbar">
-        <!-- LEFT -->
-        <div class="navbar-left">
-            <i class="bi bi-layout-text-window-reverse"></i>
-            <span class="page-title">
-                @yield('page-title', 'Dashboard')
-            </span>
-        </div>
+<nav class="app-navbar">
 
-        <!-- RIGHT -->
-        <div class="navbar-right">
-            <div class="user-wrapper">
-                <i class="bi bi-person-circle"></i>
-                <span class="user-name">{{ Auth::user()->name }}</span>
+    <!-- LEFT -->
+    <div class="navbar-left d-flex align-items-center gap-3">
 
-                <div class="user-dropdown">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit">
-                            <i class="bi bi-box-arrow-right"></i>
-                            Logout
-                        </button>
-                    </form>
-                </div>
+        {{-- LOGO KAB. ENDE --}}
+        <img src="{{ asset('images/logo-ende.png') }}"
+             alt="Logo Ende"
+             class="logo-ende">
+
+        {{-- NAMA INSTANSI --}}
+     <span class="page-title instansi-title">
+    Dinas Penanaman Modal<br>
+    <small class="sub-instansi">
+        Dan Pelayanan Terpadu Satu Pintu Kabupaten Ende
+    </small>
+</span>
+
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="navbar-right">
+        <div class="user-wrapper">
+            <i class="bi bi-person-circle"></i>
+            <span class="user-name">{{ Auth::user()->name }}</span>
+
+            <div class="user-dropdown">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Logout
+                    </button>
+                </form>
             </div>
         </div>
-    </nav>
-    @endauth
+    </div>
+
+</nav>
+@endauth
+
     {{-- ================= END NAVBAR ================= --}}
 
     {{-- ================= BODY ================= --}}
@@ -77,6 +91,34 @@
 </html>
 
 <style>
+ .instansi-title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.2;
+    color: #1f2937;
+}
+
+.sub-instansi {
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.logo-ende {
+    height: 40px;
+    width: auto;
+}
+
+.app-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 22px;
+    background: #ffffff;
+    border-bottom: 1px solid #eee;
+}
+
+
 /* ================= APP STRUCTURE ================= */
 .app-wrapper {
     min-height: 100vh;
