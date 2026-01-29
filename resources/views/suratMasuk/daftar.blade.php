@@ -55,9 +55,11 @@
                     <tbody>
                         @forelse ($suratMasuk as $item)
                             <tr>
-                                <td class="ps-4">{{ $loop->iteration }}</td>
+                                <td class="ps-4">
+                                    {{ ($suratMasuk->currentPage() - 1) * $suratMasuk->perPage() + $loop->iteration }}
+                                </td>
                                 <td>{{ $item->nomor_surat }}</td>
-                                <td>{{ $item->tanggal_surat }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->tanggal_surat)->format('d/m/Y') }}</td>
                                 <td>{{ $item->asal_surat }}</td>
                                 <td>{{ $item->perihal }}</td>
                                 <td class="text-center">
@@ -81,24 +83,28 @@
                             </tr>
                         @endforelse
                     </tbody>
-
                 </table>
             </div>
         </div>
     </div>
 
+    {{-- PAGINATION --}}
+    @if($suratMasuk->hasPages())
+    <div class="d-flex justify-content-center mt-4 animate-fade">
+        {{ $suratMasuk->links() }}
+    </div>
+    @endif
+
 </div>
 
 {{-- STYLE --}}
 <style>
-/* CARD */
 .card-minimal {
     border: none;
     border-radius: 18px;
     box-shadow: 0 10px 28px rgba(0,0,0,.05);
 }
 
-/* TABLE */
 .table thead th {
     font-size: 14px;
     text-transform: uppercase;
@@ -110,7 +116,6 @@
     background: #f8f9fa;
 }
 
-/* BUTTON SOFT (KONSISTEN) */
 .btn-soft {
     border-radius: 50px;
     padding: 6px 16px;
@@ -129,12 +134,10 @@
     background: #dcedc8;
 }
 
-/* INPUT */
 .input-group-text {
     border-radius: 50px;
 }
 
-/* ANIMATION */
 .animate-fade {
     animation: fadeUp .5s ease;
 }

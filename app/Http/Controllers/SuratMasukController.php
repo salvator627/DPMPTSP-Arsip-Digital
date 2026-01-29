@@ -48,10 +48,15 @@ public function daftar(Request $request)
     $search = $request->search;
 
     $suratMasuk = SuratMasuk::when($search, function ($query, $search) {
-        $query->where('nomor_surat', 'like', "%{$search}%")
-              ->orWhere('asal_surat', 'like', "%{$search}%")
-              ->orWhere('perihal', 'like', "%{$search}%");
-    })->orderBy('id', 'asc')->get();
+            $query->where(function ($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%{$search}%")
+                  ->orWhere('asal_surat', 'like', "%{$search}%")
+                  ->orWhere('perihal', 'like', "%{$search}%");
+            });
+        })
+        ->orderBy('id', 'asc')
+        ->paginate(10)           // 🔥 PAGINATION
+        ->withQueryString();     // 🔥 Biar search tidak hilang saat pindah halaman
 
     return view('suratMasuk.daftar', compact('suratMasuk', 'search'));
 }
